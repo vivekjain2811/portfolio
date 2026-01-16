@@ -1,22 +1,56 @@
 /* 
 ========================================
-   Main JavaScript (Clean & Native)
+   Main JavaScript (Polished)
 ========================================
 */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Mobile Nav
+    // Elements
+    const navbar = document.getElementById('navbar');
+    const backToTopBtn = document.getElementById('backToTop');
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
 
+    /* 
+    ------------------------------
+    Sticky Navbar Logic
+    ------------------------------
+    */
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+            backToTopBtn.classList.add('visible');
+        } else {
+            navbar.classList.remove('scrolled');
+            backToTopBtn.classList.remove('visible');
+        }
+    });
+
+    /* 
+    ------------------------------
+    Back to Top
+    ------------------------------
+    */
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    /* 
+    ------------------------------
+    Mobile Nav
+    ------------------------------
+    */
     if (hamburger && navLinks) {
         hamburger.addEventListener('click', () => {
             const isActive = navLinks.style.display === 'flex';
-            navLinks.style.display = isActive ? 'none' : 'flex';
 
-            // Simple absolute positioning style for mobile if active
             if (!isActive) {
+                navLinks.style.display = 'flex';
+                // Mobile styles applied via JS for toggle simplicity
                 navLinks.style.position = 'absolute';
                 navLinks.style.top = '100%';
                 navLinks.style.left = '0';
@@ -26,27 +60,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 navLinks.style.padding = '2rem';
                 navLinks.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
             } else {
-                navLinks.removeAttribute('style');
+                navLinks.style.display = 'none';
             }
         });
     }
 
-    // Smooth Scroll
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-
-            if (targetElement) {
-                targetElement.scrollIntoView({
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-
-    // Simple Reveal Animation
+    /* 
+    ------------------------------
+    Scroll Reveal Animation
+    ------------------------------
+    */
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -56,10 +79,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, { threshold: 0.1 });
 
-    document.querySelectorAll('.section, .bento-card, .job-item').forEach(el => {
+    // Target elements to animate
+    const animatableElements = document.querySelectorAll('.project-card, .stat-card, .skill-pill, .testimonial-card, .section-title, .lead');
+
+    animatableElements.forEach((el, index) => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        el.style.transition = `opacity 0.6s ease, transform 0.6s ease`;
+        // Optional: staggered delay based on index could be added here, 
+        // but simple reveal is often cleaner.
         observer.observe(el);
     });
 
